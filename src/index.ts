@@ -39,7 +39,8 @@ app.use('/api', authRoutes);
 app.use('/api', productsRoutes);
 app.use('/api', dashboardRoutes);
 
-app.get('/', (_req, res) => res.render('index', { title: 'NodePOS' }));
+app.get('/', (_req, res) => res.render('dashboard'));
+app.get('/login', (_req, res) => res.render('index', { title: 'NodePOS' }));
 app.get('/dashboard', (_req, res) => res.render('dashboard'));
 app.get('/healthz', (_req, res) => res.json({ ok: true, vercel: !!process.env.VERCEL }));
 

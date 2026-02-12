@@ -3,8 +3,6 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import fs from 'fs';
-import http from 'http';
-import { Server as IOServer } from 'socket.io';
 import sequelize from './config/database';
 import authRoutes from './routes/auth';
 import productsRoutes from './routes/products';
@@ -13,8 +11,6 @@ import bcrypt from 'bcryptjs';
 import User from './models/User';
 
 const app = express();
-const server = http.createServer(app);
-const io = new IOServer(server, { cors: { origin: true, credentials: true } });
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(cookieParser());
@@ -40,22 +36,24 @@ app.use('/api', dashboardRoutes);
 
 app.get('/', (_req, res) => res.render('index', { title: 'NodePOS' }));
 
-io.on('connection', socket => {
-  socket.emit('hello', { ok: true });
-});
+// Best-effort DB init without blocking serverless cold start
+(async () => {
+  try {
+    await sequelize.authenticate();
+    const users = await User.count();
+    if (users === 0) {
+      const hash = await bcrypt.hash('password', 10);
+      await User.create({ name: 'Test User', email: 'test@example.com', password: hash });
+    }
+  } catch (e) {}
+})();
 
-async function start() {
-  await sequelize.sync();
-  const users = await User.count();
-  if (users === 0) {
-    const hash = await bcrypt.hash('password', 10);
-    await User.create({ name: 'Test User', email: 'test@example.com', password: hash });
-    console.log('Seeded default user: test@example.com / password');
-  }
+// Local development server; Vercel will import the app and handle requests
+if (!process.env.VERCEL) {
   const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-  server.listen(port, () => {
+  app.listen(port, () => {
     console.log(`NodePOS running at http://127.0.0.1:${port}`);
   });
 }
 
-start();
+export default app;

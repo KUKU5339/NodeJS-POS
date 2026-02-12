@@ -2,8 +2,8 @@ import { Router } from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { auth } from '../middleware/auth';
-import { index, store } from '../controllers/ProductController';
+import { auth } from '../middleware/auth.js';
+import { index, store } from '../controllers/ProductController.js';
 
 const storageRoot = path.resolve(path.join(process.cwd(), 'public', 'storage'));
 const productsDir = path.join(storageRoot, 'products');

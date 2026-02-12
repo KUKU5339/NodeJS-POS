@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import Product from '../models/Product';
-import Sale from '../models/Sale';
+import Product from '../models/Product.js';
+import Sale from '../models/Sale.js';
 
 export async function stats(req: Request, res: Response) {
   const userId = (req as any).userId || 1;

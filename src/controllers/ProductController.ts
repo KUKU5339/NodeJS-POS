@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Product from '../models/Product';
+import Product from '../models/Product.js';
 import path from 'path';
 
 function imageUrl(req: Request, rel?: string | null) {

@@ -3,12 +3,12 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import fs from 'fs';
-import sequelize from './config/database';
-import authRoutes from './routes/auth';
-import productsRoutes from './routes/products';
-import dashboardRoutes from './routes/dashboard';
+import sequelize from './config/database.js';
+import authRoutes from './routes/auth.js';
+import productsRoutes from './routes/products.js';
+import dashboardRoutes from './routes/dashboard.js';
 import bcrypt from 'bcryptjs';
-import User from './models/User';
+import User from './models/User.js';
 
 const app = express();
 
@@ -19,13 +19,18 @@ app.use(express.urlencoded({ extended: true }));
 
 const projectRoot = path.resolve(process.cwd());
 const publicDir = path.join(projectRoot, 'public');
-const storageDir = path.join(publicDir, 'storage');
-const productsDir = path.join(storageDir, 'products');
-fs.mkdirSync(productsDir, { recursive: true });
+const isVercel = !!process.env.VERCEL;
+const storageBase = isVercel ? path.join('/tmp', 'storage') : path.join(publicDir, 'storage');
+const productsDir = path.join(storageBase, 'products');
+try {
+  fs.mkdirSync(productsDir, { recursive: true });
+} catch (e) {
+  if (!isVercel) throw e;
+}
 
 app.set('views', path.join(projectRoot, 'views'));
 app.set('view engine', 'ejs');
-app.use('/storage', express.static(storageDir));
+app.use('/storage', express.static(storageBase));
 app.use('/', express.static(publicDir));
 
 app.get('/csrf-token', (req, res) => res.json({ csrf_token: 'node' }));

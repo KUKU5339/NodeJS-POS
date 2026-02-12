@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">StreetPOS</div>
+      <nav>
+        <a href="/dashboard">Dashboard</a>
+        <a href="#" id="logout">Logout</a>
+      </nav>
+    </header>
+    <main class="container">
+      <h1>Dashboard</h1>
+      <div class="grid">
+        <div class="card">
+          <h3>Total Revenue</h3>
+          <p id="totalSales">—</p>
+        </div>
+        <div class="card">
+          <h3>Items Sold</h3>
+          <p id="itemsSold">—</p>
+        </div>
+        <div class="card">
+          <h3>Products</h3>
+          <p id="productsCount">—</p>
+        </div>
+      </div>
+      <section>
+        <h2>Recent Sales</h2>
+        <table class="table" id="recentSalesTable">
+          <thead><tr><th>ID</th><th>Product</th><th>Qty</th><th>Total</th><th>Date</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', async () => {
+        const token = window.getToken();
+        if (!token) {
+          window.location.href = '/';
+          return;
+        }
+        document.getElementById('logout').addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('nodepos_token');
+          window.location.href = '/';
+        });
+        const stats = await window.apiGet('/api/dashboard/stats');
+        if (stats) {
+          document.getElementById('totalSales').textContent = Number(stats.totalSales || 0).toFixed(2);
+          document.getElementById('itemsSold').textContent = String(stats.totalItemsSold || 0);
+          document.getElementById('productsCount').textContent = String(stats.totalProducts || 0);
+        }
+        const recent = await window.apiGet('/api/dashboard/recent-sales');
+        if (recent && Array.isArray(recent.sales)) {
+          const tbody = document.querySelector('#recentSalesTable tbody');
+          tbody.innerHTML = recent.sales.map(s => (
+            '<tr><td>'+s.id+'</td><td>'+s.product_name+'</td><td>'+s.quantity+'</td><td>'+s.total+'</td><td>'+s.date+'</td></tr>'
+          )).join('');
+        }
+      });
+    </script>
+  </body>
+</html>

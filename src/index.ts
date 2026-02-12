@@ -40,18 +40,24 @@ app.use('/api', productsRoutes);
 app.use('/api', dashboardRoutes);
 
 app.get('/', (_req, res) => res.render('index', { title: 'NodePOS' }));
+app.get('/healthz', (_req, res) => res.json({ ok: true, vercel: !!process.env.VERCEL }));
 
 // Best-effort DB init without blocking serverless cold start
-(async () => {
-  try {
-    await sequelize.authenticate();
-    const users = await User.count();
-    if (users === 0) {
-      const hash = await bcrypt.hash('password', 10);
-      await User.create({ name: 'Test User', email: 'test@example.com', password: hash });
-    }
-  } catch (e) {}
-})();
+const conn = (process.env.DB_CONNECTION || 'sqlite').toLowerCase();
+if (!process.env.VERCEL || (process.env.VERCEL && conn !== 'sqlite')) {
+  (async () => {
+    try {
+      if (sequelize) {
+        await sequelize.authenticate();
+        const users = await User.count();
+        if (users === 0) {
+          const hash = await bcrypt.hash('password', 10);
+          await User.create({ name: 'Test User', email: 'test@example.com', password: hash });
+        }
+      }
+    } catch (e) {}
+  })();
+}
 
 // Local development server; Vercel will import the app and handle requests
 if (!process.env.VERCEL) {

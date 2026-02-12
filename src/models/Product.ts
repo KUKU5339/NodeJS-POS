@@ -25,16 +25,20 @@ class Product extends Model<ProductAttrs, ProductCreation> implements ProductAtt
   public readonly updatedAt!: Date;
 }
 
-Product.init(
-  {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    userId: { type: DataTypes.INTEGER, allowNull: false },
-    name: { type: DataTypes.STRING, allowNull: false },
-    price: { type: DataTypes.FLOAT, allowNull: false },
-    stock: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
-    image: { type: DataTypes.STRING, allowNull: true }
-  },
-  { sequelize, tableName: 'products' }
-);
+if (sequelize) {
+  try {
+    Product.init(
+      {
+        id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+        userId: { type: DataTypes.INTEGER, allowNull: false },
+        name: { type: DataTypes.STRING, allowNull: false },
+        price: { type: DataTypes.FLOAT, allowNull: false },
+        stock: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
+        image: { type: DataTypes.STRING, allowNull: true }
+      },
+      { sequelize, tableName: 'products' }
+    );
+  } catch {}
+}
 
 export default Product;

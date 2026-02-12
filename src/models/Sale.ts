@@ -23,15 +23,19 @@ class Sale extends Model<SaleAttrs, SaleCreation> implements SaleAttrs {
   public readonly updatedAt!: Date;
 }
 
-Sale.init(
-  {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    userId: { type: DataTypes.INTEGER, allowNull: false },
-    productId: { type: DataTypes.INTEGER, allowNull: false },
-    quantity: { type: DataTypes.INTEGER, allowNull: false },
-    total: { type: DataTypes.FLOAT, allowNull: false }
-  },
-  { sequelize, tableName: 'sales' }
-);
+if (sequelize) {
+  try {
+    Sale.init(
+      {
+        id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+        userId: { type: DataTypes.INTEGER, allowNull: false },
+        productId: { type: DataTypes.INTEGER, allowNull: false },
+        quantity: { type: DataTypes.INTEGER, allowNull: false },
+        total: { type: DataTypes.FLOAT, allowNull: false }
+      },
+      { sequelize, tableName: 'sales' }
+    );
+  } catch {}
+}
 
 export default Sale;

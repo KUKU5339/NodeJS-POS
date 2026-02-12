@@ -21,14 +21,18 @@ class User extends Model<UserAttrs, UserCreation> implements UserAttrs {
   public readonly updatedAt!: Date;
 }
 
-User.init(
-  {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    name: { type: DataTypes.STRING, allowNull: false },
-    email: { type: DataTypes.STRING, allowNull: false, unique: true },
-    password: { type: DataTypes.STRING, allowNull: false }
-  },
-  { sequelize, tableName: 'users' }
-);
+if (sequelize) {
+  try {
+    User.init(
+      {
+        id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+        name: { type: DataTypes.STRING, allowNull: false },
+        email: { type: DataTypes.STRING, allowNull: false, unique: true },
+        password: { type: DataTypes.STRING, allowNull: false }
+      },
+      { sequelize, tableName: 'users' }
+    );
+  } catch {}
+}
 
 export default User;

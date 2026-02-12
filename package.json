@@ -18,7 +18,9 @@
     "sequelize": "^6.37.3",
     "socket.io": "^4.7.5",
     "sqlite3": "^5.1.7",
-    "mysql2": "^3.9.7"
+    "mysql2": "^3.9.7",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",

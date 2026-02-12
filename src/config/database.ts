@@ -21,11 +21,21 @@ function createSequelize(): Sequelize | null {
       });
     }
     if (conn === 'postgres') {
+      const url = process.env.DATABASE_URL;
+      const sslEnabled = (process.env.DB_SSL || 'true').toLowerCase() === 'true';
+      if (url) {
+        return new Sequelize(url, {
+          dialect: 'postgres',
+          logging: false,
+          dialectOptions: sslEnabled ? { ssl: { require: true, rejectUnauthorized: false } } : {}
+        });
+      }
       return new Sequelize(process.env.DB_DATABASE || '', process.env.DB_USERNAME || '', process.env.DB_PASSWORD || '', {
         dialect: 'postgres',
         host: process.env.DB_HOST,
         port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 5432,
-        logging: false
+        logging: false,
+        dialectOptions: sslEnabled ? { ssl: { require: true, rejectUnauthorized: false } } : {}
       });
     }
     return null;

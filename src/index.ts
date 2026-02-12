@@ -52,6 +52,7 @@ if (!process.env.VERCEL || (process.env.VERCEL && conn !== 'sqlite')) {
     try {
       if (sequelize) {
         await sequelize.authenticate();
+        await sequelize.sync();
         const users = await User.count();
         if (users === 0) {
           const hash = await bcrypt.hash('password', 10);

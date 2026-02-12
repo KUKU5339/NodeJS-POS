@@ -95,9 +95,13 @@ window.apiGet = async function(path) {
           errEl.style.display = '';
           return;
         }
-        okEl.textContent = 'Account created! Redirecting to login...';
+        if (data.token) {
+          localStorage.setItem('nodepos_token', data.token);
+          window.location.href = '/dashboard';
+          return;
+        }
+        okEl.textContent = 'Account created! Please login.';
         okEl.style.display = '';
-        setTimeout(() => { window.location.href = '/login'; }, 1200);
       } catch (err) {
         errEl.textContent = 'Network error';
         errEl.style.display = '';

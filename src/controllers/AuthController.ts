@@ -12,7 +12,8 @@ export async function register(req: Request, res: Response) {
   if (exists) return res.status(409).json({ message: 'exists' });
   const hash = await bcrypt.hash(password, 10);
   const user = await User.create({ name, email, password: hash });
-  return res.json({ id: user.id });
+  const token = jwt.sign({ sub: user.id }, JWT_SECRET, { expiresIn: '7d' });
+  return res.json({ id: user.id, token });
 }
 
 export async function login(req: Request, res: Response) {

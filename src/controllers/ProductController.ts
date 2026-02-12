@@ -11,7 +11,7 @@ function imageUrl(req: Request, rel?: string | null) {
 export async function index(req: Request, res: Response) {
   const userId = (req as any).userId || 1;
   const search = String(req.query.search || '');
-  const products = await Product.findAll({
+  const products = await (Product as any).findAll({
     where: search ? { userId, name: { contains: search } as any } : { userId },
     order: [['id', 'DESC']]
   });
@@ -35,7 +35,7 @@ export async function store(req: Request, res: Response) {
   if (!name) return res.status(422).json({ message: 'name required' });
   const file = (req as any).file as Express.Multer.File | undefined;
   const rel = file ? path.join('products', file.filename) : null;
-  await Product.create({
+  await (Product as any).create({
     userId,
     name: String(name),
     price: Number(price),

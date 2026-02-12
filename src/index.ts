@@ -7,6 +7,8 @@ import sequelize from './config/database.js';
 import authRoutes from './routes/auth.js';
 import productsRoutes from './routes/products.js';
 import dashboardRoutes from './routes/dashboard.js';
+import salesRoutes from './routes/sales.js';
+import reportsRoutes from './routes/reports.js';
 import bcrypt from 'bcryptjs';
 import User from './models/User.js';
 
@@ -38,11 +40,19 @@ app.get('/csrf-token', (req, res) => res.json({ csrf_token: 'node' }));
 app.use('/api', authRoutes);
 app.use('/api', productsRoutes);
 app.use('/api', dashboardRoutes);
+app.use('/api', salesRoutes);
+app.use('/api', reportsRoutes);
 
 app.get('/', (_req, res) => res.render('index', { title: 'StreetPOS' }));
 app.get('/login', (_req, res) => res.render('index', { title: 'StreetPOS' }));
 app.get('/dashboard', (_req, res) => res.render('dashboard'));
 app.get('/register', (_req, res) => res.render('register'));
+app.get('/products', (_req, res) => res.render('products'));
+app.get('/quick-sale', (_req, res) => res.render('quick-sale'));
+app.get('/sales', (_req, res) => res.render('sales'));
+app.get('/profit', (_req, res) => res.render('profit'));
+app.get('/stock-alerts', (_req, res) => res.render('stock-alerts'));
+app.get('/reports', (_req, res) => res.render('reports'));
 app.get('/healthz', (_req, res) => res.json({ ok: true, vercel: !!process.env.VERCEL }));
 
 // Best-effort DB init without blocking serverless cold start

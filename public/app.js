@@ -15,6 +15,26 @@ window.apiGet = async function(path) {
   }
 };
 
+(function(){
+  function setOfflineBanner(online) {
+    var el = document.getElementById('offlineBanner');
+    if (!el) return;
+    el.style.display = online ? 'none' : '';
+  }
+  function broadcast(status) {
+    try { localStorage.setItem('streetpos_net', status + ':' + Date.now()); } catch(e) {}
+  }
+  setOfflineBanner(navigator.onLine);
+  window.addEventListener('online', function(){ setOfflineBanner(true); broadcast('online'); });
+  window.addEventListener('offline', function(){ setOfflineBanner(false); broadcast('offline'); });
+  window.addEventListener('storage', function(e){
+    if (e.key === 'streetpos_net') {
+      var online = String(e.newValue || '').startsWith('online');
+      setOfflineBanner(online);
+    }
+  });
+})();
+
 (function() {
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {

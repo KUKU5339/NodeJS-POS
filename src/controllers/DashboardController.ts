@@ -33,3 +33,18 @@ export async function lowStock(req: Request, res: Response) {
     products: products.map(p => ({ name: p.name, stock: p.stock }))
   });
 }
+
+export async function topProducts(req: Request, res: Response) {
+  const userId = (req as any).userId || 1;
+  const sales = await Sale.findAll({ where: { userId } });
+  const counts: Record<string, number> = {};
+  sales.forEach(s => {
+    const key = String(s.productId);
+    counts[key] = (counts[key] || 0) + s.quantity;
+  });
+  const items = Object.entries(counts)
+    .map(([name, total_sold]) => ({ name, total_sold }))
+    .sort((a, b) => b.total_sold - a.total_sold)
+    .slice(0, 5);
+  res.json({ products: items });
+}

@@ -64,3 +64,44 @@ window.apiGet = async function(path) {
     });
   }
 })();
+
+(function() {
+  const regForm = document.getElementById('registerForm');
+  if (regForm) {
+    regForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const password2 = document.getElementById('password2').value.trim();
+      const errEl = document.getElementById('regError');
+      const okEl = document.getElementById('regSuccess');
+      errEl.style.display = 'none';
+      okEl.style.display = 'none';
+      if (password !== password2) {
+        errEl.textContent = 'Passwords do not match';
+        errEl.style.display = '';
+        return;
+      }
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.id) {
+          errEl.textContent = (data && data.message) ? data.message : 'Registration failed';
+          errEl.style.display = '';
+          return;
+        }
+        okEl.textContent = 'Account created! Redirecting to login...';
+        okEl.style.display = '';
+        setTimeout(() => { window.location.href = '/login'; }, 1200);
+      } catch (err) {
+        errEl.textContent = 'Network error';
+        errEl.style.display = '';
+      }
+    });
+  }
+})();

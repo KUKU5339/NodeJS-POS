@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - StreetPOS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:linear-gradient(135deg,#FFD700 0%,#ffc107 50%,#800000 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+    .auth-wrapper{width:100%;max-width:420px}
+    .auth-container{background:#fff;padding:40px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:slideUp 0.5s ease}
+    @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    .logo{text-align:center;margin-bottom:30px}
+    .logo-icon{font-size:48px}
+    .logo-text{font-size:28px;font-weight:800;color:#800000;margin-top:8px}
+    .logo-tagline{font-size:12px;color:#a00000;margin-top:4px}
+    h2{font-size:22px;margin-bottom:20px;color:#333}
+    .form-group{margin-bottom:15px}
+    .form-group label{display:block;margin-bottom:8px;color:#800000;font-weight:600}
+    .input-wrapper{position:relative}
+    .input-wrapper input{width:100%;padding:12px 40px 12px 40px;border:1px solid #ddd;border-radius:10px;font-size:14px;outline:none}
+    .input-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#800000}
+    .toggle-password{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:#800000}
+    .btn-submit{width:100%;background:#800000;color:#FFD700;border:none;padding:12px;border-radius:10px;font-weight:700;cursor:pointer}
+    .btn-submit:hover{opacity:.9}
+    .divider{display:flex;align-items:center;gap:10px;margin:20px 0;color:#888;font-size:12px}
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:#eee}
+    .switch-link{text-align:center;font-size:13px;color:#666}
+    .switch-link a{color:#800000;text-decoration:none;font-weight:600}
+    .alert-error{background:#ffebee;color:#c62828;border:1px solid #ffcdd2;padding:12px;border-radius:10px;margin-bottom:15px;display:none}
+    .alert-success{background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9;padding:12px;border-radius:10px;margin-bottom:15px;display:none}
+    #offlineBanner{position:fixed;top:0;left:0;right:0;background:#c62828;color:#fff;padding:10px 16px;text-align:center;display:none;z-index:9999}
+  </style>
+</head>
+<body>
+  <div id="offlineBanner"><i class="fas fa-wifi-slash"></i> You're Offline - Sales will sync when connected</div>
+  <div class="auth-wrapper">
+    <div class="auth-container">
+      <div class="logo">
+        <div class="logo-icon">🍢</div>
+        <div class="logo-text">StreetPOS</div>
+        <div class="logo-tagline">Start Managing Your Business Today</div>
+      </div>
+      <h2>Create Your Account</h2>
+      <p id="regSuccess" class="alert-success"></p>
+      <p id="regError" class="alert-error"></p>
+      <form id="registerForm">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user input-icon"></i>
+            <input type="text" id="name" placeholder="Juan Dela Cruz" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="email" placeholder="your@email.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="password" placeholder="Enter your password" required>
+            <i class="fas fa-eye toggle-password" onclick="togglePassword('password')"></i>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password2">Confirm Password</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="password2" placeholder="Confirm your password" required>
+            <i class="fas fa-eye toggle-password" onclick="togglePassword('password2')"></i>
+          </div>
+        </div>
+        <button type="submit" class="btn-submit"><i class="fas fa-user-plus"></i> Create Account</button>
+      </form>
+      <div class="divider"><span>Already have an account?</span></div>
+      <div class="switch-link">Go back to <a href="/login">Login →</a></div>
+    </div>
+  </div>
+  <script src="/app.js"></script>
+  <script>
+    function togglePassword(id){const p=document.getElementById(id);p.type=p.type==='password'?'text':'password'}
+  </script>
+</body>
+</html>

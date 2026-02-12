@@ -42,6 +42,7 @@ app.use('/api', dashboardRoutes);
 app.get('/', (_req, res) => res.render('index', { title: 'StreetPOS' }));
 app.get('/login', (_req, res) => res.render('index', { title: 'StreetPOS' }));
 app.get('/dashboard', (_req, res) => res.render('dashboard'));
+app.get('/register', (_req, res) => res.render('register'));
 app.get('/healthz', (_req, res) => res.json({ ok: true, vercel: !!process.env.VERCEL }));
 
 // Best-effort DB init without blocking serverless cold start

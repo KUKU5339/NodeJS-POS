@@ -5,9 +5,14 @@ import fs from 'fs';
 import { auth } from '../middleware/auth.js';
 import { index, store } from '../controllers/ProductController.js';
 
-const storageRoot = path.resolve(path.join(process.cwd(), 'public', 'storage'));
+const isVercel = !!process.env.VERCEL;
+const storageRoot = isVercel ? path.join('/tmp', 'storage') : path.resolve(path.join(process.cwd(), 'public', 'storage'));
 const productsDir = path.join(storageRoot, 'products');
-fs.mkdirSync(productsDir, { recursive: true });
+try {
+  fs.mkdirSync(productsDir, { recursive: true });
+} catch (e) {
+  if (!isVercel) throw e;
+}
 
 const upload = multer({
   storage: multer.diskStorage({
